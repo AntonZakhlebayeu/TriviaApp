@@ -11,7 +11,9 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="answers"
+    )
     answer = models.TextField()
     is_correct = models.BooleanField()
 
@@ -20,7 +22,15 @@ class Answer(models.Model):
 
 
 class AnsweredQuestions(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answer')
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='user_answer')
-    answered_user = models.ForeignKey('trivia_user.User', on_delete=models.CASCADE, related_name='answered_user')
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="answer"
+    )
+    answer = models.ForeignKey(
+        Answer, on_delete=models.CASCADE, related_name="user_answer"
+    )
+    answered_user = models.ForeignKey(
+        "trivia_user.User",
+        on_delete=models.CASCADE,
+        related_name="answered_user",
+    )
     is_correct = models.BooleanField()

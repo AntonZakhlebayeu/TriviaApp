@@ -1,13 +1,11 @@
 from rest_framework import serializers
-
-from trivia.models import Question, Answer
+from trivia.models import Answer, Question
 
 
 class AnswerSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Answer
-        fields = ['answer', 'is_correct']
+        fields = ["answer", "is_correct"]
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -15,4 +13,4 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['category', 'question', 'answers']
+        fields = ["category", "question", "answers"]

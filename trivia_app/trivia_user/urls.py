@@ -1,7 +1,7 @@
 from django.urls import include, path
-from trivia_user.views import UserViewSet
 from rest_framework.routers import SimpleRouter
 from rest_framework.urlpatterns import format_suffix_patterns
+from trivia_user.views import UserViewSet
 
 router = SimpleRouter()
 router.register("users", UserViewSet)

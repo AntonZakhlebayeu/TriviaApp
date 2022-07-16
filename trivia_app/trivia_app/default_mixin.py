@@ -8,5 +8,7 @@ class GetSerializerMixin:
 
 class GetPermissionsMixin:
     def get_permissions(self):
-        permission_classes = self.permission_classes.get(self.action, IsAuthenticated)
+        permission_classes = self.permission_classes.get(
+            self.action, IsAuthenticated
+        )
         return [permission() for permission in permission_classes]
