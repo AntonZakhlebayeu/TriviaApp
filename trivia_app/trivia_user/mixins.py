@@ -1,12 +1,5 @@
 from datetime import datetime
 
-from trivia_user.models import User
-from trivia_user.permissions import IsInRoleAdmin
-from trivia_user.serializers import (
-    LoginSerializer,
-    RegistrationSerializer,
-    UserSerializer,
-)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.mixins import (
@@ -17,6 +10,13 @@ from rest_framework.mixins import (
 )
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from trivia_user.models import User
+from trivia_user.permissions import IsInRoleAdmin
+from trivia_user.serializers import (
+    LoginSerializer,
+    RegistrationSerializer,
+    UserSerializer,
+)
 
 from trivia_app.default_mixin import GetPermissionsMixin, GetSerializerMixin
 
@@ -44,12 +44,8 @@ class UserMixin(
     }
 
     permission_classes = {
-        "retrieve": (
-            IsAuthenticated,
-        ),
-        "list": (
-            IsAuthenticated,
-        ),
+        "retrieve": (IsAuthenticated,),
+        "list": (IsAuthenticated,),
         "destroy": (
             IsAuthenticated,
             IsInRoleAdmin,
@@ -70,7 +66,9 @@ class UserMixin(
 
     def retrieve(self, request, *args, **kwargs):
         if User.objects.filter(pk=kwargs["pk"]).first() is None:
-            return Response({"detail": "Not Found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Not Found."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = self.get_serializer(User.objects.get(pk=kwargs["pk"]))
 
@@ -84,7 +82,9 @@ class UserMixin(
 
     def update(self, request, *args, **kwargs):
         if User.objects.filter(pk=kwargs["pk"]).first() is None:
-            return Response({"detail": "Not Found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Not Found."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer_data = request.data.get(
             "user",
