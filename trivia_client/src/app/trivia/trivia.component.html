@@ -1,0 +1,32 @@
+<div id="question-container">
+  <div id="question-header">
+    <h3>Question {{ questionNumber + 1 }}</h3>
+    <h3 class="score">Score: {{ correctAnswers }}/{{ questionNumber }}</h3>
+  </div>
+  <ng-container *ngIf="question; else quizComplete">
+    <p><b>{{ question.category }}</b></p>
+    <label id="question-radio-group-label" [innerHTML]="question.question"></label>
+    <mat-radio-group
+      aria-labelledby="question-radio-group-label"
+      class="question-radio-group"
+      [disabled]="disableRadioButtons"
+      [(ngModel)]="answer">
+      <mat-radio-button class="question-radio-button" *ngFor="let answer of question.answers" [value]="answer" (change)="answerSelected($event)">
+        {{answer.answer}}
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <div *ngIf="answer">
+      <div *ngIf="answer.is_correct; else incorrect">
+        <p>Correct!</p>
+      </div>
+      <ng-template #incorrect>
+        <p>Wrong! The correct answer is {{ getCorrectAnswer() }}</p>
+      </ng-template>
+    </div>
+    <button mat-flat-button color="primary" id="next-button" [disabled]="disableNextButton" (click)="getNextQuestion()">Next Question</button>
+  </ng-container>
+  <ng-template #quizComplete>
+    <p>We're all out of questions!</p>
+  </ng-template>
+</div>
