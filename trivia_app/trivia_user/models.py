@@ -1,14 +1,17 @@
-from django.db import models
+from datetime import datetime, timedelta
+
+import jwt
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
-from datetime import datetime, timedelta
-import jwt
+from django.db import models
 
 from trivia_app import settings
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
+    def create_user(
+        self, username, email, first_name=None, last_name=None, password=None
+    ):
 
         if email is None:
             raise TypeError("Users must have an email address.")
@@ -18,6 +21,8 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             username=username,
+            first_name=first_name,
+            last_name=last_name,
             email=self.normalize_email(email),
         )
         user.set_password(password)
@@ -40,7 +45,6 @@ class UserManager(BaseUserManager):
 class User(AbstractUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(db_index=True, max_length=255, unique=True)
-    refresh_token = models.CharField(max_length=255, blank=True)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
@@ -53,32 +57,10 @@ class User(AbstractUser, PermissionsMixin):
     def access_token(self):
         return self._generate_access_jwt_token()
 
-    @property
-    def set_and_get_refresh_token(self):
-        refresh_token = self._generate_refresh_token()
-        self.refresh_token = refresh_token
-        self.save()
-        return refresh_token
-
-    def update_refresh_token(self):
-        self.refresh_token = self._generate_refresh_token()
-        self.save()
-
     def _generate_access_jwt_token(self):
-        dt = datetime.now() + timedelta(minutes=5)
+        dt = datetime.now() + timedelta(hours=5)
         token = jwt.encode(
             {"id": self.pk, "exp": int(dt.strftime("%s"))},
-            settings.SECRET_KEY,
-            algorithm="HS256",
-        )
-
-        return token
-
-    def _generate_refresh_token(self):
-        dt = datetime.now() + timedelta(hours=5)
-
-        token = jwt.encode(
-            {"exp": int(dt.strftime("%s"))},
             settings.SECRET_KEY,
             algorithm="HS256",
         )

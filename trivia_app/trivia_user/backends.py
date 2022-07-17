@@ -1,33 +1,17 @@
 import jwt
 from django.conf import settings
-from trivia_user.models import User
 from rest_framework import authentication, exceptions
-
-
-def expired_token(request):
-    refresh_token = request.COOKIES["refresh_token"]
-
-    try:
-        jwt.decode(refresh_token, settings.SECRET_KEY, algorithms="HS256")
-    except jwt.ExpiredSignatureError:
-        msg = "Authentication error. Expired access and refresh token."
-        raise exceptions.AuthenticationFailed(msg)
-
-    user = User.objects.get(refresh_token=refresh_token)
-
-    if user is None:
-        raise User.DoesNotExist
-
-    return user.access_token
+from trivia_user.models import User
 
 
 def _authenticate_credentials(request, access_token):
     try:
-        payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms="HS256")
+        payload = jwt.decode(
+            access_token, settings.SECRET_KEY, algorithms="HS256"
+        )
     except jwt.ExpiredSignatureError:
-        access_token = expired_token(request)
-
-        payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms="HS256")
+        msg = "Authentication error. Expired token."
+        raise exceptions.AuthenticationFailed(msg)
     except jwt.DecodeError:
         msg = "Authentication error. Invalid token."
         raise exceptions.AuthenticationFailed(msg)
@@ -39,10 +23,6 @@ def _authenticate_credentials(request, access_token):
         user = User.objects.get(pk=payload["id"])
     except User.DoesNotExist:
         msg = "The user corresponding to the given token was not found."
-        raise exceptions.AuthenticationFailed(msg)
-
-    if not user.is_active:
-        msg = "This user has been disabled."
         raise exceptions.AuthenticationFailed(msg)
 
     request.COOKIES["access_token"] = access_token

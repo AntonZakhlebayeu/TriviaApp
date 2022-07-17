@@ -20,6 +20,7 @@ pytest-factoryboy = "^2.5.0"
 model-bakery = "^1.6.0"
 apiclient = "^1.0.4"
 DateTime = "^4.5"
+django-cors-headers = "^3.13.0"
 
 [tool.poetry.dev-dependencies]
 
@@ -43,4 +44,3 @@ exclude = '''
     | dist
 )/
 '''
-
