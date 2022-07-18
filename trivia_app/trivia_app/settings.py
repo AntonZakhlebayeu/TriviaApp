@@ -9,6 +9,8 @@ env_path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+KAFKA_URI = os.getenv("KAFKA_URI")
+KAFKA_CHANNEL = os.getenv("KAFKA_CHANNEL")
 
 DEBUG = True
 

@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from trivia.models import Answer, Question
+from trivia.producer import kfk
 from trivia.serializers import QuestionSerializer
 from trivia_user.permissions import IsInRoleAdmin
 
@@ -35,4 +36,15 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
                     question=q, answer=answer, is_correct=False
                 )
 
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(
+        detail=False,
+        methods=("post",),
+        permission_classes=[
+            IsAuthenticated,
+        ],
+    )
+    def answer(self, request):
+        kfk(request, request.data.get("answer"))
         return Response(status=status.HTTP_204_NO_CONTENT)

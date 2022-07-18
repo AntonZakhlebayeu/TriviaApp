@@ -9,6 +9,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            "pk",
             "email",
             "first_name",
             "last_name",
@@ -31,6 +32,7 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            "id",
             "email",
             "first_name",
             "last_name",
@@ -70,7 +72,10 @@ class LoginSerializer(serializers.ModelSerializer):
             )
 
         return {
+            "id": user.pk,
             "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
             "username": user.username,
             "access_token": user.access_token,
         }

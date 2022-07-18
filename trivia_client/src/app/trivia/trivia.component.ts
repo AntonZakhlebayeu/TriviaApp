@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { TriviaService } from "../trivia.service";
-import { Answer, Question, QuestionArray} from "../trivia";
+import {Component, OnInit} from '@angular/core';
+import {TriviaService} from "../trivia.service";
+import {Answer, Question, QuestionArray} from "../trivia";
 import {MatRadioChange} from "@angular/material/radio";
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'app-trivia',
@@ -46,6 +47,12 @@ export class TriviaComponent implements OnInit {
     }
 
     if (this.answer) {
+      this.triviaService.sendAnswer(this.answer.is_correct)
+        .pipe(first())
+      .subscribe({
+        next: () => {},
+        error: () => {}
+      });
       this.questionNumber++;
       if (this.answer.is_correct) {
         this.correctAnswers++;
@@ -64,7 +71,7 @@ export class TriviaComponent implements OnInit {
 
   getCorrectAnswer() {
     if (this.question) {
-      return this.question.answers.filter(answer => answer.is_correct)[0].answer;
+      return this.question.answers.filter(answer => answer.is_correct)[0].answer
     }
     return '';
   }

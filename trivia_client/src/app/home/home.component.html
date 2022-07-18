@@ -1,6 +1,9 @@
 <div class="p-4">
   <div class="container">
     <h1>Hi {{user['username']}}!</h1>
-    <p>You're logged in. Now you can play in Trivia.</p>
+    <p style="margin-bottom: 40px">You're logged in. Now you can play in Trivia.</p>
+    <h3>Your statistics:</h3>
+    <h4>You answered: {{statistics['amount_of_answers']}}</h4>
+    <h4>Correct answers were: {{statistics['amount_of_correct_answers']}}</h4>
   </div>
 </div>

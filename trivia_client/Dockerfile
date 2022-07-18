@@ -6,3 +6,5 @@ USER node
 COPY --chown=node:node ./trivia_client/package.json ./trivia_client/package-lock.json ./
 RUN npm ci --quiet
 COPY --chown=node:node . .
+
+EXPOSE 4200

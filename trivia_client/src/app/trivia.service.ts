@@ -16,4 +16,8 @@ export class TriviaService {
  getTrivia(): Observable<QuestionArray> {
    return this.http.get(`${environment.apiUrl}/questions/`) as Observable<QuestionArray>;
  }
+
+ sendAnswer(answer: boolean): any {
+   return this.http.post(`${environment.apiUrl}/questions/answer/`, {'answer': answer});
+ }
 }

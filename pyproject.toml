@@ -21,6 +21,11 @@ model-bakery = "^1.6.0"
 apiclient = "^1.0.4"
 DateTime = "^4.5"
 django-cors-headers = "^3.13.0"
+fastapi = "^0.79.0"
+uvicorn = "^0.18.2"
+aioredis = "^2.0.1"
+aiokafka = "^0.7.2"
+kafka = "^1.3.5"
 
 [tool.poetry.dev-dependencies]
 

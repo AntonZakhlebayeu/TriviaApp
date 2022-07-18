@@ -38,6 +38,43 @@ services:
     ports:
       - "5432:5432"
 
+  fastapi:
+    restart: always
+    volumes:
+      - ./trivia_microservice:/app
+    build:
+      context: .
+      dockerfile: ./trivia_microservice/Dockerfile
+    env_file:
+      - ./trivia_microservice/.env
+    entrypoint:
+      ./fast-api-entrypoint.sh
+    depends_on:
+      - redis
+    ports:
+      - "8080:8080"
+
+  redis:
+      image: redis:6.2-alpine
+      ports:
+        - "6379:6379"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    env_file:
+      - ./trivia_microservice/.env
+    ports:
+      - "22181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+    env_file:
+      - ./trivia_microservice/.env
+
 
 volumes:
   postgres_data:
