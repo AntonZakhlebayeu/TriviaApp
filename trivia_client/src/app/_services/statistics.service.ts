@@ -6,8 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { Statistics} from "../_models/statistics";
 import { AccountService } from "./account.service";
-import { User } from "../_models/user";
-import {environment} from "../../environments/environment";
+import {environment} from "@environments/environment";
 
 
 @Injectable({ providedIn: 'root' })
@@ -36,5 +35,9 @@ export class StatisticsService {
         this.statisticsSubject.next(statistics);
         return statistics;
       }));
+  }
+
+  logout() {
+    localStorage.removeItem('statistics');
   }
 }

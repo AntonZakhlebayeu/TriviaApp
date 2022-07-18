@@ -7,7 +7,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from settings import settings
 
-from trivia_microservice.database import get_statistics, set_statistics
+from trivia_microservice.database import (
+    get_statistics,
+    set_default_statistics,
+    set_statistics,
+)
 
 app = FastAPI()
 loop = asyncio.get_event_loop()
@@ -47,9 +51,13 @@ async def consume():
     try:
         async for msg in consumer:
             deserialized_data = pickle.loads(msg.value).get("msg")
-            await set_statistics(
-                deserialized_data.get("id"), deserialized_data.get("answer")
-            )
+            if deserialized_data.get("login") is not None:
+                await get_statistics(deserialized_data.get("id"))
+            else:
+                await set_statistics(
+                    deserialized_data.get("id"),
+                    deserialized_data.get("answer"),
+                )
 
     finally:
         await consumer.stop()
@@ -58,6 +66,11 @@ async def consume():
 @app.get("/api/statistics/{id}")
 async def user_statistics(id: int):
     return await get_statistics(id)
+
+
+@app.post("/api/statistics/{id}")
+async def set_user_statistics(id: int):
+    await set_default_statistics(id)
 
 
 if __name__ == "__main__":

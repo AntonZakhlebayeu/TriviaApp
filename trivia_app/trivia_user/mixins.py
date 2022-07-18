@@ -10,6 +10,7 @@ from rest_framework.mixins import (
 )
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from trivia.producer import kfk_login
 from trivia_user.models import User
 from trivia_user.permissions import IsInRoleAdmin
 from trivia_user.serializers import (
@@ -136,6 +137,8 @@ class UserMixin(
             ),
             httponly=True,
         )
+
+        kfk_login(user_model.pk)
 
         return response
 
